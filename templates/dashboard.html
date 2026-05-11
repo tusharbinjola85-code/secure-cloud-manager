@@ -1,0 +1,403 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Cloud Manager</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-cloud"></i>
+
+            <h1>SecureCloud</h1>
+
+        </div>
+
+        <ul>
+
+            <li>
+
+                <a href="#">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    Dashboard
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="#files-section">
+
+                    <i class="fa-solid fa-file"></i>
+
+                    My Files
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="/logout/">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    Logout
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <h1>
+
+                Welcome, {{ request.user.username }}
+
+            </h1>
+
+        </div>
+
+        <!-- STATS -->
+
+        <div class="stats-grid">
+
+            <div class="card">
+
+                <i class="fa-solid fa-users"></i>
+
+                <h2>{{ total_users }}</h2>
+
+                <p>Total Users</p>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fa-solid fa-file"></i>
+
+                <h2>{{ total_files }}</h2>
+
+                <p>Total Files</p>
+
+            </div>
+
+        </div>
+
+        <!-- UPLOAD -->
+
+        <div class="upload-section">
+
+            <div class="upload-box">
+
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                <h2>Upload File</h2>
+
+                <p>
+
+                    Drag & Drop files here or choose manually
+
+                </p>
+
+                <form method="POST" enctype="multipart/form-data">
+
+                    {% csrf_token %}
+
+                    <input type="file" name="file" required>
+
+                    <br><br>
+
+                    <button class="upload-btn" type="submit">
+
+                        Upload File
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- STORAGE -->
+
+            <div class="storage-box">
+
+                <h3>Storage Usage</h3>
+
+                <div class="storage-bar">
+
+                    <div class="storage-fill"></div>
+
+                </div>
+
+                <p class="storage-text">
+
+                    45% Storage Used
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- ACTIVITY -->
+
+        <div class="activity-box">
+
+            <h3>Recent Activity</h3>
+
+            <div class="activity-item">
+
+                <i class="fa-solid fa-upload"></i>
+
+                File uploaded successfully
+
+            </div>
+
+            <div class="activity-item">
+
+                <i class="fa-solid fa-user"></i>
+
+                New user registered
+
+            </div>
+
+        </div>
+
+        <!-- FILES SECTION -->
+
+        <div class="files-section" id="files-section">
+
+            <div class="files-header">
+
+                <h2>Your Files</h2>
+
+                <input
+                type="text"
+                id="searchInput"
+                placeholder="Search files...">
+
+            </div>
+
+            <!-- FILTER BUTTONS -->
+
+            <div class="filter-buttons">
+
+                <button onclick="filterFiles('all')">
+
+                    All
+
+                </button>
+
+                <button onclick="filterFiles('image')">
+
+                    Images
+
+                </button>
+
+                <button onclick="filterFiles('pdf')">
+
+                    PDF
+
+                </button>
+
+                <button onclick="filterFiles('doc')">
+
+                    Docs
+
+                </button>
+
+            </div>
+
+            <!-- FILE LOOP -->
+
+            {% for file in files %}
+
+            <div class="file-item"
+
+            data-type="
+
+            {% if '.png' in file.file.name or '.jpg' in file.file.name or '.jpeg' in file.file.name %}
+
+            image
+
+            {% elif '.pdf' in file.file.name %}
+
+            pdf
+
+            {% elif '.doc' in file.file.name or '.docx' in file.file.name %}
+
+            doc
+
+            {% else %}
+
+            other
+
+            {% endif %}
+
+            ">
+
+                <!-- IMAGE PREVIEW -->
+
+                {% if ".png" in file.file.name or ".jpg" in file.file.name or ".jpeg" in file.file.name %}
+
+                <div class="image-preview">
+
+                    <img src="{{ file.file.url }}" alt="preview">
+
+                </div>
+
+                {% endif %}
+
+                <!-- LEFT -->
+
+                <div class="file-left">
+
+                    {% if ".pdf" in file.file.name %}
+
+                    <i class="fa-solid fa-file-pdf"></i>
+
+                    {% elif ".png" in file.file.name or ".jpg" in file.file.name or ".jpeg" in file.file.name %}
+
+                    <i class="fa-solid fa-file-image"></i>
+
+                    {% elif ".zip" in file.file.name or ".rar" in file.file.name %}
+
+                    <i class="fa-solid fa-file-zipper"></i>
+
+                    {% elif ".doc" in file.file.name or ".docx" in file.file.name %}
+
+                    <i class="fa-solid fa-file-word"></i>
+
+                    {% else %}
+
+                    <i class="fa-solid fa-file"></i>
+
+                    {% endif %}
+
+                    <div>
+
+                        <span class="filename">
+
+                            {{ file.file.name }}
+
+                        </span>
+
+                        <br>
+
+                        <small style="color:#94a3b8;">
+
+                            {{ file.file.size|filesizeformat }}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTIONS -->
+
+                <div class="file-actions">
+
+                    <a href="{{ file.file.url }}"
+                    target="_blank"
+                    class="download-btn">
+
+                        <i class="fa-solid fa-download"></i>
+
+                    </a>
+
+                    <a href="/delete/{{ file.id }}/"
+                    class="delete-btn">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p style="color:white; margin-top:20px;">
+
+                No files uploaded yet.
+
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+<!-- RECENT FILES -->
+
+<div class="recent-files-box">
+
+    <h2>
+
+        <i class="fa-solid fa-clock-rotate-left"></i>
+
+        Recent Uploads
+
+    </h2>
+
+    {% for recent in recent_files %}
+
+    <div class="recent-item">
+
+        <i class="fa-solid fa-file"></i>
+
+        <span>
+
+            {{ recent.file.name }}
+
+        </span>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+<script src="{% static 'js/script.js' %}"></script>
+
+</body>
+
+</html>
