@@ -6,6 +6,11 @@ from django.conf import settings
 
 from django.conf.urls.static import static
 
+admin.site.site_header = "Secure Cloud Manager Admin"
+
+admin.site.site_title = "Secure Cloud Manager"
+
+admin.site.index_title = "Welcome Admin"
 
 urlpatterns = [
 
