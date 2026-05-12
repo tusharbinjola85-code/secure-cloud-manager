@@ -1,15 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Secure Cloud Manager</title>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 
 <body>
@@ -20,7 +24,10 @@
 
     <div class="sidebar">
 
-        <h2><i class="fa-solid fa-cloud"></i> SecureCloud</h2>
+        <h2>
+            <i class="fa-solid fa-cloud"></i>
+            SecureCloud
+        </h2>
 
         <ul>
 
@@ -53,8 +60,14 @@
 
     <div class="main-content">
 
+        <!-- TOP BAR -->
+
         <div class="top-bar">
-            <h1>Welcome, {{ request.user.username }}</h1>
+
+            <h1>
+                Welcome, {{ request.user.username }}
+            </h1>
+
         </div>
 
         <!-- STATS -->
@@ -62,24 +75,35 @@
         <div class="stats">
 
             <div class="card">
+
                 <i class="fa-solid fa-users"></i>
+
                 <h2>{{ total_users }}</h2>
+
                 <p>Total Users</p>
+
             </div>
 
             <div class="card">
+
                 <i class="fa-solid fa-file"></i>
+
                 <h2>{{ total_files }}</h2>
+
                 <p>Total Files</p>
+
             </div>
 
         </div>
 
-        <!-- UPLOAD -->
+        <!-- UPLOAD SECTION -->
 
         <div class="upload-section">
 
-            <h2>Upload File</h2>
+            <h2>
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Upload File
+            </h2>
 
             <form method="POST" enctype="multipart/form-data">
 
@@ -88,59 +112,143 @@
                 <input type="file" name="file" required>
 
                 <button type="submit" class="upload-btn">
+
+                    <i class="fa-solid fa-upload"></i>
+
                     Upload File
+
                 </button>
 
             </form>
 
         </div>
 
-        <!-- FILES -->
+        <!-- RECENT FILES -->
 
-        <div class="files-section" id="files-section">
+        <div class="recent-section">
 
-            <h2>Your Files</h2>
+            <h2>
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Recent Uploads
+            </h2>
 
-            {% for file in files %}
+            <div class="recent-files">
 
-            <div class="file-item">
+                {% for file in recent_files %}
 
-                <div class="file-left">
+                <div class="recent-card">
 
-                    <i class="fa-solid fa-file"></i>
+                    {% if '.png' in file.file.url or '.jpg' in file.file.url or '.jpeg' in file.file.url %}
 
-                    <span class="filename">
-                        {{ file.file.name }}
-                    </span>
+                        <img src="{{ file.file.url }}" class="recent-image">
+
+                    {% elif '.pdf' in file.file.url %}
+
+                        <div class="recent-pdf">
+
+                            <i class="fa-solid fa-file-pdf"></i>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="recent-other">
+
+                            <i class="fa-solid fa-file"></i>
+
+                        </div>
+
+                    {% endif %}
+
+                    <p>{{ file.file.name }}</p>
 
                 </div>
 
-                <div class="file-actions">
+                {% empty %}
 
-                    <a href="{{ file.file.url }}"
-                    target="_blank"
-                    class="download-btn">
+                <p>No recent uploads</p>
 
-                        <i class="fa-solid fa-download"></i>
-
-                    </a>
-
-                    <a href="/delete/{{ file.id }}/"
-                    class="delete-btn">
-
-                        <i class="fa-solid fa-trash"></i>
-
-                    </a>
-
-                </div>
+                {% endfor %}
 
             </div>
 
-            {% empty %}
+        </div>
 
-            <p>No files uploaded yet.</p>
+        <!-- FILES SECTION -->
 
-            {% endfor %}
+        <div class="files-section" id="files-section">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Your Files
+            </h2>
+
+            <div class="files-grid">
+
+                {% for file in files %}
+
+                <div class="file-card">
+
+                    {% if '.png' in file.file.url or '.jpg' in file.file.url or '.jpeg' in file.file.url %}
+
+                        <img src="{{ file.file.url }}" class="file-preview">
+
+                    {% elif '.pdf' in file.file.url %}
+
+                        <div class="pdf-box">
+
+                            <i class="fa-solid fa-file-pdf"></i>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="other-file">
+
+                            <i class="fa-solid fa-file"></i>
+
+                        </div>
+
+                    {% endif %}
+
+                    <div class="file-info">
+
+                        <p class="filename">
+
+                            {{ file.file.name }}
+
+                        </p>
+
+                        <div class="file-buttons">
+
+                            <a href="{{ file.file.url }}"
+                            target="_blank"
+                            class="download-btn">
+
+                                <i class="fa-solid fa-download"></i>
+
+                            </a>
+
+                            <a href="/delete/{{ file.id }}/"
+                            class="delete-btn">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <p>No files uploaded yet.</p>
+
+                {% endfor %}
+
+            </div>
 
         </div>
 
@@ -149,4 +257,5 @@
 </div>
 
 </body>
+
 </html>
