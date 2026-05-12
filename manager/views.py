@@ -144,6 +144,10 @@ from django.http import HttpResponse
 
 def share_file(request, file_id):
 
-    file = get_object_or_404(FileUpload, id=file_id)
+    shared_file = get_object_or_404(FileUpload, id=file_id)
 
-    return redirect(file.file.url)
+    return render(request, 'share.html', {
+
+        'shared_file': shared_file
+
+    })
