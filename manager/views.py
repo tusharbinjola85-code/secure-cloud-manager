@@ -1,3 +1,5 @@
+
+
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib.auth.models import User
@@ -20,6 +22,7 @@ def login_view(request):
         username = request.POST['username']
 
         password = request.POST['password']
+        
 
         user = authenticate(
             username=username,
@@ -51,6 +54,8 @@ def register_view(request):
 
         password = request.POST['password']
 
+        email = request.POST['email']
+
         if User.objects.filter(username=username).exists():
 
             error = "Username already exists"
@@ -59,6 +64,8 @@ def register_view(request):
 
             User.objects.create_user(
                 username=username,
+                email=email,
+
                 password=password
             )
 

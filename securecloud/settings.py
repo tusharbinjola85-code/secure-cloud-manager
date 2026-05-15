@@ -135,6 +135,6 @@ EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'YOUR_GMAIL@gmail.com'
+EMAIL_HOST_USER = 'tusharbinjola6@gmail.com'
 
-EMAIL_HOST_PASSWORD = 'anpx jtqf nime tbep'
+EMAIL_HOST_PASSWORD = 'yhyy ziaz maef kjkk'
